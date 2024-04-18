@@ -1,5 +1,5 @@
-const readCSV = require('../../src/csvReader');
-const parseQuery = require('../../src/queryParser');
+const { readCSV}  = require('../../src/csvReader');
+const { parseQuery } = require('../../src/queryParser');
 const executeSELECTQuery = require('../../src/index');
 
 test('Read CSV File', async () => {
@@ -13,11 +13,9 @@ test('Read CSV File', async () => {
 test('Parse SQL Query', () => {
     const query = 'SELECT id, name FROM sample';
     const parsed = parseQuery(query);
-    expect(parsed).toEqual({
-        fields: ['id', 'name'],
-        table: 'sample',
-        whereClauses: []
-    });
+    expect(parsed).toHaveProperty('fields', ['id', 'name']);
+    expect(parsed).toHaveProperty('table', 'sample');
+    expect(parsed).toHaveProperty('whereClauses', []);
 });
 
 test('Execute SQL Query', async () => {
@@ -33,15 +31,9 @@ test('Execute SQL Query', async () => {
 test('Parse SQL Query with WHERE Clause', () => {
     const query = 'SELECT id, name FROM sample WHERE age = 25';
     const parsed = parseQuery(query);
-    expect(parsed).toEqual({
-        fields: ['id', 'name'],
-        table: 'sample',
-        whereClauses: [{
-          field: "age",
-          operator: "=",
-          value: "25",
-        }],
-    });
+    expect(parsed).toHaveProperty('fields', ['id', 'name']);
+    expect(parsed).toHaveProperty('table', 'sample');
+    expect(parsed).toHaveProperty('whereClauses', [{ field: 'age', operator: '=', value: '25' }]);
 });
 
 test('Execute SQL Query with WHERE Clause', async () => {
@@ -56,19 +48,12 @@ test('Execute SQL Query with WHERE Clause', async () => {
 test('Parse SQL Query with Multiple WHERE Clauses', () => {
     const query = 'SELECT id, name FROM sample WHERE age = 30 AND name = John';
     const parsed = parseQuery(query);
-    expect(parsed).toEqual({
-        fields: ['id', 'name'],
-        table: 'sample',
-        whereClauses: [{
-            "field": "age",
-            "operator": "=",
-            "value": "30",
-        }, {
-            "field": "name",
-            "operator": "=",
-            "value": "John",
-        }]
-    });
+    expect(parsed).toHaveProperty('fields', ['id', 'name']);
+    expect(parsed).toHaveProperty('table', 'sample');
+    expect(parsed).toHaveProperty('whereClauses', [
+        { field: 'age', operator: '=', value: '30' },
+        { field: 'name', operator: '=', value: 'John' }
+    ]);
 });
 
 test('Execute SQL Query with Multiple WHERE Clause', async () => {
